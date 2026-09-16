@@ -1,7 +1,7 @@
 import mongodb from "@fastify/mongodb";
 import type { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import type { Collection, Document } from "mongodb";
+import type { Collection, Document, ObjectId } from "mongodb";
 import packageJson from "../../package.json" with { type: "json" };
 
 /**
@@ -184,14 +184,33 @@ export default fp<InitMongoPluginOptions>(async (fastify, opts) => {
     }
     const example = db.collection<Document>("example");
     await example.createIndex({ example: 1 });
-    fastify.decorate("collections", { example });
+
+    const todos = db.collection<TodoDocument>("todos");
+    await todos.createIndex({ user: 1, createdAt: -1 });
+    await todos.createIndex({ user: 1, dueDate: 1 });
+
+    fastify.decorate("collections", { example, todos });
   });
 });
+
+/** A per-user todo item owned by the `user` username. */
+export interface TodoDocument {
+  _id?: ObjectId;
+  // Owner username, mirroring `request.user.username`.
+  user: string;
+  title: string;
+  done: boolean;
+  // ISO date-time string; null when no deadline is set.
+  dueDate: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 declare module "fastify" {
   export interface FastifyInstance {
     collections: {
       example: Collection<Document>;
+      todos: Collection<TodoDocument>;
     };
   }
 }
