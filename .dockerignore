@@ -1,0 +1,9 @@
+.git
+node_modules
+.env
+.env.*
+coverage
+.cache
+work
+*.bundle
+*.zip
