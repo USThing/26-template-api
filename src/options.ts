@@ -1,5 +1,6 @@
 import type { AutoloadPluginOptions } from "@fastify/autoload";
 import type { FastifyServerOptions } from "fastify";
+import { loadUsers } from "./auth/users.js";
 import type { AuthPluginOptions } from "./plugins/auth.js";
 import type { InitMongoPluginOptions } from "./plugins/init-mongo.js";
 
@@ -124,7 +125,14 @@ export type AppOptions = {
   AuthPluginOptions;
 
 export function loadOptions(env: Env = Bun.env): AppOptions {
+  const authSkip = getBooleanOption(env, "AUTH_SKIP", false);
+  if (env.NODE_ENV === "production" && authSkip) {
+    throw new Error("AUTH_SKIP must be disabled in production");
+  }
   const options: AppOptions = {
+    ajv: { customOptions: { removeAdditional: false } },
+    bodyLimit: 32 * 1024,
+    logger: { redact: ["req.headers.authorization"] },
     // Launching lots of services on the server,
     // especially at the same time by something such as docker compose up,
     // leads to slow startups.
@@ -137,7 +145,8 @@ export function loadOptions(env: Env = Bun.env): AppOptions {
     // crash startup.
     mongoUri: getOption(env, "MONGO_URI", false)?.trim() || undefined,
     mongoTestUri: getOption(env, "MONGO_TEST_URI", false)?.trim() || undefined,
-    authSkip: getBooleanOption(env, "AUTH_SKIP", false),
+    authSkip,
+    users: loadUsers(env.AUTH_USERS, env.NODE_ENV === "production"),
   };
 
   return options;

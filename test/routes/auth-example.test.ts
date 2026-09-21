@@ -3,8 +3,6 @@ import * as assert from "node:assert";
 import Fastify from "fastify";
 import AuthPlugin, { type AuthPluginOptions } from "../../src/plugins/auth.js";
 import Sensible from "../../src/plugins/sensible.js";
-import AuthExample from "../../src/routes/auth-example/index.js";
-import Example from "../../src/routes/example/index.js";
 
 // Register the internal auth plugin and the route plugins on a bare Fastify
 // instance. `authSkip` defaults to false, so scoped requests must present one
@@ -13,8 +11,10 @@ async function buildAuthApp(options: AuthPluginOptions = {}) {
   const app = Fastify();
   await app.register(AuthPlugin, options);
   await app.register(Sensible);
-  await app.register(AuthExample, { prefix: "/auth-example" });
-  await app.register(Example, { prefix: "/example" });
+  app.withAuth(async (scope) => {
+    scope.get("/auth-example", async (request) => request.user.username);
+  });
+  app.get("/example", async () => "this is an example");
   await app.ready();
   return app;
 }

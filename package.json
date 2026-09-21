@@ -1,16 +1,16 @@
 {
   "type": "module",
-  "name": "template-api",
-  "version": "0.0.0",
+  "name": "custom-timetable-api",
+  "version": "1.0.0",
   "private": true,
-  "description": "A simple, singular Fastify + TypeScript + MongoDB service template for USThing, running on Bun.",
+  "description": "Per-user custom timetable events with iCalendar export.",
   "main": "src/app.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "dev": "bun --bun fastify start --watch --log-level=debug --pretty-logs --options src/app.ts",
-    "start": "bun --bun fastify start --log-level=info --options src/app.ts",
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts",
     "test": "bun test --coverage --timeout=60000 test",
     "compile": "tsc && tsc -p test/tsconfig.json",
     "check": "biome ci .",
@@ -21,7 +21,7 @@
     "bun": ">=1.4.2"
   },
   "keywords": [],
-  "author": "USThing Team",
+  "author": "Weilin Du",
   "license": "MIT",
   "dependencies": {
     "@fastify/autoload": "^6.5.0",
@@ -31,8 +31,9 @@
     "@fastify/swagger": "^9.8.1",
     "@fastify/swagger-ui": "^6.1.1",
     "@scalar/fastify-api-reference": "^1.68.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "fastify": "^5.12.4",
-    "fastify-cli": "^8.0.2",
     "fastify-plugin": "^6.0.0",
     "mongodb": "^7.6.0",
     "typebox": "^1.3.31"
@@ -41,6 +42,7 @@
     "@biomejs/biome": "2.5.13",
     "@fastify/type-provider-typebox": "^6.1.0",
     "@types/bun": "^1.4.2",
+    "ical.js": "^2.2.1",
     "mongodb-memory-server": "^11.2.0",
     "typescript": "7.0.2"
   }
