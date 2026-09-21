@@ -1,5 +1,7 @@
 # Contributing
 
+> **Applicants:** this repository does not accept pull requests. Work in your own copy — fork or clone, then push to a repo under your own account — and submit as instructed in your application materials. PRs from non-collaborators are closed automatically.
+
 Small PRs, rebase-clean on `main`. That's most of it. Branch off, make your change, run the checks at the bottom, open a PR. Reviews are questions and suggestions rather than verdicts on you; expect a couple of rounds on anything nontrivial, and batch your follow-ups so a review can actually converge.
 
 ## Style

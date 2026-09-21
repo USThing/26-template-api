@@ -2,6 +2,8 @@
 
 A small Fastify + TypeScript service with MongoDB built in. Bun runs it and Biome keeps it tidy. With no configuration at all, dev and tests spin up a throwaway in-memory MongoDB, so `bun install && bun run dev` is genuinely all it takes to get going.
 
+> **Applicants:** do not open pull requests here (they are closed automatically). Work in your own copy and submit as instructed in your application materials.
+
 ## What you need
 
 Bun 1.4.2 or newer. Older versions break the MongoDB driver; 1.3.14 will not work. Docker is only worth installing if you want a database that survives restarts.
